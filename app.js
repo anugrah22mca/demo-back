@@ -24,14 +24,14 @@ const upload = multer({ storage: storage });
 app.use(cors());
 app.use(express.json());
 
-app.get("/download/:filename", async (req, res) => {
+app.get("/api/download/:filename", async (req, res) => {
   const filename = req.params.filename
   let x = await s3.getObject({ Bucket: "hackathonanugrah", Key: filename }).promise();
   console.log(x)
   res.json(x.Body)
 })
 
-app.get('/getfiles',async(req,res)=>{
+app.get('/api/getfiles',async(req,res)=>{
   var bucketParams = {
     Bucket: 'hackathonanugrah',
   };
@@ -43,7 +43,7 @@ app.get('/getfiles',async(req,res)=>{
     }
   });
 })
-app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/api/upload', upload.single('file'), async (req, res) => {
   const { originalname, buffer } = req.file;
 
   const params = {
@@ -70,7 +70,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-app.get('/files', async (req, res) => {
+app.get('/api/files', async (req, res) => {
   try {
     const files = await Upload.find({}, 'fileName s3Url uploadDate');
     res.json(files);
@@ -80,7 +80,7 @@ app.get('/files', async (req, res) => {
   }
 });
 
-app.get('/file/:fileName', async (req, res) => {
+app.get('/api/file/:fileName', async (req, res) => {
   const { fileName } = req.params;
 
   try {
